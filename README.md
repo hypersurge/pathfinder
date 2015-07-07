@@ -1,12 +1,13 @@
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE.md) [![Haxelib Version](https://img.shields.io/badge/haxelib-v0.1.3-blue.svg)](http://lib.haxe.org/p/tweezer)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE.md) [![Haxelib Version](https://img.shields.io/badge/haxelib-v0.1.5-blue.svg)](http://lib.haxe.org/p/tweezer)
 
 # Pathfinder
-Pathfinder is an A* (A Star) pathfinding and graph traversal library designed primarily for use with awe6 (optional).
+Pathfinder is an A* (A Star) pathfinding and graph traversal library designed primarily for use with [awe6](http://awe6.org) (optional).
 
-This [Haxe](http://haxe.org) library extends [statm's haxe-astar algorithm](https://github.com/statm/haxe-astar) to generate optimised paths on a boolean grid / map using [A* heuristics](https://en.wikipedia.org/wiki/A*_search_algorithm).  Great for NPC navigation in RTS games.
+This [Haxe](http://haxe.org) library extends [statm's haxe-astar algorithm](https://github.com/statm/haxe-astar) to generate optimised paths on a boolean grid / map using [A* heuristics](https://en.wikipedia.org/wiki/A*_search_algorithm).  Great for NPC navigation in RTS games!
 	
 ## Usage
 
+First set up the map:
 ```
 class Map implements IMap
 {	
@@ -25,7 +26,9 @@ class Map implements IMap
 		// return true if the corresponding tile is walkable, and false if it obstructed
 	}
 }
-
+```
+Next set up the pathfinder
+```
 var l_map = new Map( 30, 30 ); // Create a 30x30 map
 var l_pathfinder = new Pathfinder( l_map ); // Create a Pathfinder engine configured for our map
 var l_startNode = new Coordinate( 10, 10 ); // 	The starting node
@@ -38,7 +41,6 @@ for ( i in l_path )
 {
 	// handle the path - e.g. have an NPC add each coodinate as a waypoint to process
 }
-
 ```
 
 Please note, for real-world implementations local variables need not be used, they are shown here for ease of explanation.

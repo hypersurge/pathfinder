@@ -30,17 +30,6 @@ class MapDisplay extends MapData
 		_drawMap();
 	}
 	
-	private function _getGridCoordinate( p_x:Float, p_y:Float ):Coordinate
-	{
-		var l_col:Int = Std.int( p_x / GRID_SIZE );
-		var l_row:Int = Std.int( p_y / GRID_SIZE );
-		if ( l_col < 0 ) l_col = 0;
-		if ( l_col >= cols ) l_col = cols - 1;
-		if ( l_row < 0 ) l_row = 0;
-		if ( l_row >= rows ) l_row = rows - 1;
-		return new Coordinate( l_col, l_row );
-	}
-	
 	private function _drawMap():Void
 	{
 		_graphics.clear();
