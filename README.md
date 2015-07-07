@@ -4,7 +4,9 @@
 Pathfinder is an A* (A Star) pathfinding and graph traversal library designed primarily for use with [awe6](http://awe6.org) (optional).
 
 This [Haxe](http://haxe.org) library extends [statm's haxe-astar algorithm](https://github.com/statm/haxe-astar) to generate optimised paths on a boolean grid / map using [A* heuristics](https://en.wikipedia.org/wiki/A*_search_algorithm).  Great for NPC navigation in RTS games!
-	
+
+See some [examples](http://hypersurge.github.io/pathfinder/).
+
 ## Usage
 
 First set up the map:
@@ -54,5 +56,5 @@ The following A Star Heuristics are included:
  * Euclidian: shortest path but slow (the brainiac)
  * Manhattan: fastest, ugliest, least accurate (the athlete)
 
-A demo suite, to visually illustrate the various heuristics, is available in the [demo folder](https://github.com/hypersurge/pathfinder/tree/master/demo).  The demo uses the awe6 and createjs libraries available on haxelib.
+A demo suite, to visually illustrate the various heuristics, is available in the [demo folder](https://github.com/hypersurge/pathfinder/tree/master/demo).  The demo uses the awe6 and createjs libraries available on haxelib and can be [seen online here](http://hypersurge.github.io/pathfinder/).
 
