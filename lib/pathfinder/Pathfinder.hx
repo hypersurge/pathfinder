@@ -221,7 +221,7 @@ class Pathfinder
 					}
 					l_g = l_currentNode.g + l_cost;
 					l_f = l_g + _getCost( l_nextNode, _destNode, p_heuristic );
-					if ( ( Lambda.indexOf( _openList, l_nextNode ) != -1 ) || ( Lambda.indexOf( _closedList, l_nextNode ) != -1 ) )
+					if ( ( _openList.indexOf( l_nextNode ) != -1 ) || ( _closedList.indexOf( l_nextNode ) != -1 ) )
 					{
 						if ( l_nextNode.f > l_f )
 						{
