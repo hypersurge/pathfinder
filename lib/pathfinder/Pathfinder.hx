@@ -54,6 +54,16 @@ class Pathfinder
 
 	private var _info:{ heuristic:EHeuristic, timeElapsed:Int, pathLength:Int, isDiagonalEnabled:Bool };
 
+	static private inline function _iabs (value:Int):Int
+	{
+		return (value < 0 ? -value : value);
+	}
+
+	static private inline function _imin (v1:Int, v2:Int):Int
+	{
+		return (v1 < v2 ? v1 : v2);
+	}
+
 	/**
 	 * Creates a new pathfinder class
 	 * @param	p_map	The boolean coordinate map
@@ -108,27 +118,27 @@ class Pathfinder
 
 	private inline function _getCostDiagonal( p_node1:Node, p_node2:Node ):Float
 	{
-		var l_dx:Int = Std.int( Math.abs( p_node1.x - p_node2.x ) );
-		var l_dy:Int = Std.int( Math.abs( p_node1.y - p_node2.y ) );
-		var l_diag:Int = Std.int( Math.min( l_dx, l_dy ) );
+		var l_dx:Int = _iabs( p_node1.x - p_node2.x );
+		var l_dy:Int = _iabs( p_node1.y - p_node2.y );
+		var l_diag:Int = _imin( l_dx, l_dy );
 		var l_straight:Int = l_dx + l_dy;
 		return ( _COST_ADJACENT * ( l_straight - ( 2 * l_diag ) ) ) + ( _COST_DIAGIONAL * l_diag );
 	}
 
 	private inline function _getCostProduct( p_node1:Node, p_node2:Node ):Float
 	{
-		var l_dx1 = Std.int( Math.abs( p_node1.x - _destNode.x ) );
-		var l_dy1 = Std.int( Math.abs( p_node1.y - _destNode.y ) );
-		var l_dx2 = Std.int( Math.abs( _startNode.x - _destNode.x ) );
-		var l_dy2 = Std.int( Math.abs( _startNode.y - _destNode.y ) );
-		var l_cross = Math.abs( ( l_dx1 * l_dy2 ) - ( l_dx2 * l_dy1 ) ) * .01;
+		var l_dx1 = _iabs( p_node1.x - _destNode.x );
+		var l_dy1 = _iabs( p_node1.y - _destNode.y );
+		var l_dx2 = _iabs( _startNode.x - _destNode.x );
+		var l_dy2 = _iabs( _startNode.y - _destNode.y );
+		var l_cross = _iabs( ( l_dx1 * l_dy2 ) - ( l_dx2 * l_dy1 ) ) * .01;
 		return _getCostDiagonal( p_node1, p_node2 ) + l_cross;
 	}
 
 	private inline function _getCostEuclidian( p_node1:Node, p_node2:Node ):Float
 	{
-		var l_dx:Int = Std.int( Math.abs( p_node1.x - p_node2.x ) );
-		var l_dy:Int = Std.int( Math.abs( p_node1.y - p_node2.y ) );
+		var l_dx:Int = _iabs( p_node1.x - p_node2.x );
+		var l_dy:Int = _iabs( p_node1.y - p_node2.y );
 		return Math.sqrt( ( l_dx * l_dx ) + ( l_dy * l_dy ) ) * _COST_ADJACENT;
 	}
 
@@ -192,9 +202,9 @@ class Pathfinder
 		return l_path;
 	}
 
-	private inline function _sort( p_x:Node, p_y:Node ):Int
+	private function _sort( p_x:Node, p_y:Node ):Int
 	{
-		return Std.int( p_x.f - p_y.f );
+		return ( p_x.f > p_y.f ? 1 : ( p_x.f < p_y.f ? -1 : 0 ) );
 	}
 
 	private function _searchPath( p_heuristic:EHeuristic, p_isDiagonalEnabled:Bool = true ):Array<Coordinate>
