@@ -50,6 +50,7 @@ class Pathfinder
 	private var _destNode:Node;
 	private var _cols:Int;
 	private var _rows:Int;
+	private var _ignoreCachedPassability:Bool = false;
 
 	private var _info:{ heuristic:EHeuristic, timeElapsed:Int, pathLength:Int, isDiagonalEnabled:Bool };
 
@@ -83,6 +84,15 @@ class Pathfinder
 				l_line[l_iy] = new Node( l_ix, l_iy, _map.isWalkable( l_ix, l_iy ) );
 			}
 		}
+	}
+
+	/**
+	 * Makes pathfinder request `map.isWalkabale()` for each node during pathfinding.
+	 * Without this instruction pathfinder uses cached passability map which is created during pathfinder configuration.
+	 */
+	public function ignoreCachedPassability () : Void
+	{
+		_ignoreCachedPassability = true;
 	}
 
 	private inline function _getCost( p_node1:Node, p_node2:Node, p_heuristic:EHeuristic ):Float
@@ -206,7 +216,7 @@ class Pathfinder
 				for ( l_ix in l_minX...( l_maxX + 1 ) )
 				{
 					l_nextNode = _nodes[l_ix][l_iy];
-					if ( ( l_nextNode == l_currentNode ) || !l_nextNode.isWalkable )
+					if ( ( l_nextNode == l_currentNode ) || !_isWalkable(l_nextNode) )
 					{
 						continue;
 					}
@@ -260,6 +270,11 @@ class Pathfinder
 		var l_path = _getPath();
 		_info.pathLength = l_path.length;
 		return l_path;
+	}
+
+	private inline function _isWalkable(node:Node):Bool
+	{
+		return (_ignoreCachedPassability && _map.isWalkable(node.x, node.y)) || (!_ignoreCachedPassability && node.isWalkable);
 	}
 
 	/**
