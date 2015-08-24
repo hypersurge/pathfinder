@@ -1,9 +1,9 @@
-/*                  __  __    _____           __         
+/*                  __  __    _____           __
  *     ____  ____ _/ /_/ /_  / __(_)___  ____/ /__  _____
  *    / __ \/ __ `/ __/ __ \/ /_/ / __ \/ __  / _ \/ ___/
- *   / /_/ / /_/ / /_/ / / / __/ / / / / /_/ /  __/ /    
- *  / .___/\__,_/\__/_/ /_/_/ /_/_/ /_/\__,_/\___/_/     
- * /_/                                                   
+ *   / /_/ / /_/ / /_/ / / / __/ / / / / /_/ /  __/ /
+ *  / .___/\__,_/\__/_/ /_/_/ /_/_/ /_/\__,_/\___/_/
+ * /_/
  *
  * Copyright (c) 2013, Robert Fell
  *
@@ -35,11 +35,11 @@ import haxe.Timer;
  * @author Robert Fell
  */
 
-class Pathfinder 
+class Pathfinder
 {
 	private inline static var _COST_ADJACENT:Int = 10;
 	private inline static var _COST_DIAGIONAL:Int = 14;
-	
+
 	private var _map:IMap;
 	private var _timeOutDuration:Int;
 	private var _openList:Array<Node>;
@@ -50,25 +50,25 @@ class Pathfinder
 	private var _destNode:Node;
 	private var _cols:Int;
 	private var _rows:Int;
-	
+
 	private var _info:{ heuristic:EHeuristic, timeElapsed:Int, pathLength:Int, isDiagonalEnabled:Bool };
-	
+
 	/**
 	 * Creates a new pathfinder class
 	 * @param	p_map	The boolean coordinate map
 	 * @param	p_timeOutDuration	The maximum time spent to find a path
 	 */
-	public function new( p_map:IMap, ?p_timeOutDuration:Int = 10000 )
+	public function new( p_map:IMap, p_timeOutDuration:Int = 10000 )
 	{
 		configure( p_map, p_timeOutDuration );
 	}
-	
+
 	/**
 	 * Reconfigures an existing pathfinder class
 	 * @param	p_map	The boolean coordinate map
 	 * @param	p_timeOutDuration	The maximum time spent to find a path
 	 */
-	public function configure( p_map:IMap, ?p_timeOutDuration:Int = 10000 ) 
+	public function configure( p_map:IMap, p_timeOutDuration:Int = 10000 )
 	{
 		_map = p_map;
 		_timeOutDuration = p_timeOutDuration;
@@ -84,7 +84,7 @@ class Pathfinder
 			}
 		}
 	}
-	
+
 	private inline function _getCost( p_node1:Node, p_node2:Node, p_heuristic:EHeuristic ):Float
 	{
 		return switch( p_heuristic )
@@ -95,7 +95,7 @@ class Pathfinder
 			case MANHATTAN : _getCostManhattan( p_node1, p_node2 );
 		}
 	}
-	
+
 	private inline function _getCostDiagonal( p_node1:Node, p_node2:Node ):Float
 	{
 		var l_dx:Int = Std.int( Math.abs( p_node1.x - p_node2.x ) );
@@ -104,7 +104,7 @@ class Pathfinder
 		var l_straight:Int = l_dx + l_dy;
 		return ( _COST_ADJACENT * ( l_straight - ( 2 * l_diag ) ) ) + ( _COST_DIAGIONAL * l_diag );
 	}
-	
+
 	private inline function _getCostProduct( p_node1:Node, p_node2:Node ):Float
 	{
 		var l_dx1 = Std.int( Math.abs( p_node1.x - _destNode.x ) );
@@ -114,21 +114,21 @@ class Pathfinder
 		var l_cross = Math.abs( ( l_dx1 * l_dy2 ) - ( l_dx2 * l_dy1 ) ) * .01;
 		return _getCostDiagonal( p_node1, p_node2 ) + l_cross;
 	}
-	
+
 	private inline function _getCostEuclidian( p_node1:Node, p_node2:Node ):Float
 	{
 		var l_dx:Int = Std.int( Math.abs( p_node1.x - p_node2.x ) );
 		var l_dy:Int = Std.int( Math.abs( p_node1.y - p_node2.y ) );
 		return Math.sqrt( ( l_dx * l_dx ) + ( l_dy * l_dy ) ) * _COST_ADJACENT;
 	}
-	
+
 	private inline function _getCostManhattan( p_node1:Node, p_node2:Node ):Float
 	{
 		var l_dx:Int = p_node1.x - p_node2.x;
 		var l_dy:Int = p_node1.y - p_node2.y;
 		return ( ( l_dx > 0 ? l_dx : -l_dx ) + ( l_dy > 0 ? l_dy : -l_dy ) ) * _COST_ADJACENT;
 	}
-	
+
 	/**
 	 * Calculates an A Star path between two nodes on a boolean map
 	 * @param	p_start	The starting node
@@ -137,7 +137,7 @@ class Pathfinder
 	 * @param	p_isDiagonalEnabled	Set to true to ensure only up, left, down, right movements are allowed
 	 * @return	An array of coordinates from start to destination, or null if no path was found within the time limit
 	 */
-	public function createPath( p_start:Coordinate, p_dest:Coordinate, ?p_heuristic:EHeuristic, ?p_isDiagonalEnabled:Bool = true ):Array<Coordinate>
+	public function createPath( p_start:Coordinate, p_dest:Coordinate, ?p_heuristic:EHeuristic, p_isDiagonalEnabled:Bool = true ):Array<Coordinate>
 	{
 		if ( p_heuristic == null )
 		{
@@ -163,7 +163,7 @@ class Pathfinder
 		_openList.push( _startNode );
 		return _searchPath( p_heuristic, p_isDiagonalEnabled );
 	}
-	
+
 	private inline function _getPath():Array<Coordinate>
 	{
 		var l_path:Array<Coordinate> = new Array<Coordinate>();
@@ -181,13 +181,13 @@ class Pathfinder
 		while ( true );
 		return l_path;
 	}
-	
+
 	private inline function _sort( p_x:Node, p_y:Node ):Int
 	{
 		return Std.int( p_x.f - p_y.f );
 	}
-	
-	private function _searchPath( p_heuristic:EHeuristic, ?p_isDiagonalEnabled:Bool = true ):Array<Coordinate>
+
+	private function _searchPath( p_heuristic:EHeuristic, p_isDiagonalEnabled:Bool = true ):Array<Coordinate>
 	{
 		var l_minX:Int, l_maxX:Int, l_minY:Int, l_maxY:Int;
 		var l_g:Float, l_f:Float, l_cost:Float;
@@ -261,7 +261,7 @@ class Pathfinder
 		_info.pathLength = l_path.length;
 		return l_path;
 	}
-	
+
 	/**
 	 * A string to interpret the success of the latest path created
 	 * @return	Information string

@@ -1,9 +1,9 @@
-/*                  __  __    _____           __         
+/*                  __  __    _____           __
  *     ____  ____ _/ /_/ /_  / __(_)___  ____/ /__  _____
  *    / __ \/ __ `/ __/ __ \/ /_/ / __ \/ __  / _ \/ ___/
- *   / /_/ / /_/ / /_/ / / / __/ / / / / /_/ /  __/ /    
- *  / .___/\__,_/\__/_/ /_/_/ /_/_/ /_/\__,_/\___/_/     
- * /_/                                                   
+ *   / /_/ / /_/ / /_/ / / / __/ / / / / /_/ /  __/ /
+ *  / .___/\__,_/\__/_/ /_/_/ /_/_/ /_/\__,_/\___/_/
+ * /_/
  *
  * Copyright (c) 2013, Robert Fell
  *
@@ -39,13 +39,13 @@ class Node extends Coordinate
 	public var isWalkable:Bool;
 	public var f:Float;
 	public var g:Float;
-	
-	public function new( p_x:Int, p_y:Int, ?p_isWalkable:Bool = true )
+
+	public function new( p_x:Int, p_y:Int, p_isWalkable:Bool = true )
 	{
 		isWalkable = p_isWalkable;
 		super( p_x, p_y );
 	}
-	
+
 	override public function toString():String
 	{
 		var l_result:String;
