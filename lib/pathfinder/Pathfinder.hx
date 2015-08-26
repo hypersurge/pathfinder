@@ -51,18 +51,7 @@ class Pathfinder
 	private var _cols:Int;
 	private var _rows:Int;
 	private var _ignoreCachedPassability:Bool = false;
-
 	private var _info:{ heuristic:EHeuristic, timeElapsed:Int, pathLength:Int, isDiagonalEnabled:Bool };
-
-	static private inline function _iabs (value:Int):Int
-	{
-		return (value < 0 ? -value : value);
-	}
-
-	static private inline function _imin (v1:Int, v2:Int):Int
-	{
-		return (v1 < v2 ? v1 : v2);
-	}
 
 	/**
 	 * Creates a new pathfinder class
@@ -100,7 +89,7 @@ class Pathfinder
 	 * Makes pathfinder request `map.isWalkabale()` for each node during pathfinding.
 	 * Without this instruction pathfinder uses cached passability map which is created during pathfinder configuration.
 	 */
-	public function ignoreCachedPassability () : Void
+	public function ignoreCachedPassability():Void
 	{
 		_ignoreCachedPassability = true;
 	}
@@ -118,27 +107,27 @@ class Pathfinder
 
 	private inline function _getCostDiagonal( p_node1:Node, p_node2:Node ):Float
 	{
-		var l_dx:Int = _iabs( p_node1.x - p_node2.x );
-		var l_dy:Int = _iabs( p_node1.y - p_node2.y );
-		var l_diag:Int = _imin( l_dx, l_dy );
+		var l_dx:Int = _intAbs( p_node1.x - p_node2.x );
+		var l_dy:Int = _intAbs( p_node1.y - p_node2.y );
+		var l_diag:Int = _intMin( l_dx, l_dy );
 		var l_straight:Int = l_dx + l_dy;
 		return ( _COST_ADJACENT * ( l_straight - ( 2 * l_diag ) ) ) + ( _COST_DIAGIONAL * l_diag );
 	}
 
 	private inline function _getCostProduct( p_node1:Node, p_node2:Node ):Float
 	{
-		var l_dx1 = _iabs( p_node1.x - _destNode.x );
-		var l_dy1 = _iabs( p_node1.y - _destNode.y );
-		var l_dx2 = _iabs( _startNode.x - _destNode.x );
-		var l_dy2 = _iabs( _startNode.y - _destNode.y );
-		var l_cross = _iabs( ( l_dx1 * l_dy2 ) - ( l_dx2 * l_dy1 ) ) * .01;
+		var l_dx1:Int = _intAbs( p_node1.x - _destNode.x );
+		var l_dy1:Int = _intAbs( p_node1.y - _destNode.y );
+		var l_dx2:Int = _intAbs( _startNode.x - _destNode.x );
+		var l_dy2:Int = _intAbs( _startNode.y - _destNode.y );
+		var l_cross:Float = _intAbs( ( l_dx1 * l_dy2 ) - ( l_dx2 * l_dy1 ) ) * .01;
 		return _getCostDiagonal( p_node1, p_node2 ) + l_cross;
 	}
 
 	private inline function _getCostEuclidian( p_node1:Node, p_node2:Node ):Float
 	{
-		var l_dx:Int = _iabs( p_node1.x - p_node2.x );
-		var l_dy:Int = _iabs( p_node1.y - p_node2.y );
+		var l_dx:Int = _intAbs( p_node1.x - p_node2.x );
+		var l_dy:Int = _intAbs( p_node1.y - p_node2.y );
 		return Math.sqrt( ( l_dx * l_dx ) + ( l_dy * l_dy ) ) * _COST_ADJACENT;
 	}
 
@@ -202,11 +191,6 @@ class Pathfinder
 		return l_path;
 	}
 
-	private function _sort( p_x:Node, p_y:Node ):Int
-	{
-		return ( p_x.f > p_y.f ? 1 : ( p_x.f < p_y.f ? -1 : 0 ) );
-	}
-
 	private function _searchPath( p_heuristic:EHeuristic, p_isDiagonalEnabled:Bool = true ):Array<Coordinate>
 	{
 		var l_minX:Int, l_maxX:Int, l_minY:Int, l_maxY:Int;
@@ -226,7 +210,7 @@ class Pathfinder
 				for ( l_ix in l_minX...( l_maxX + 1 ) )
 				{
 					l_nextNode = _nodes[l_ix][l_iy];
-					if ( ( l_nextNode == l_currentNode ) || !_isWalkable(l_nextNode) )
+					if ( ( l_nextNode == l_currentNode ) || !_isWalkable( l_nextNode ) )
 					{
 						continue;
 					}
@@ -281,10 +265,25 @@ class Pathfinder
 		_info.pathLength = l_path.length;
 		return l_path;
 	}
-
-	private inline function _isWalkable(node:Node):Bool
+	
+	private function _sort( p_x:Node, p_y:Node ):Int
 	{
-		return (_ignoreCachedPassability && _map.isWalkable(node.x, node.y)) || (!_ignoreCachedPassability && node.isWalkable);
+		return ( p_x.f > p_y.f ) ? 1 : ( p_x.f < p_y.f ) ? -1 : 0;
+	}
+	
+	private inline function _intAbs( p_value:Int ):Int
+	{
+		return ( p_value < 0 ) ? -p_value : p_value;
+	}
+
+	private inline function _intMin( p_v1:Int, p_v2:Int ):Int
+	{
+		return ( p_v1 < p_v2 ) ? p_v1 : p_v2;
+	}
+
+	private inline function _isWalkable( p_node:Node ):Bool
+	{
+		return ( !_ignoreCachedPassability && p_node.isWalkable ) || ( _ignoreCachedPassability && _map.isWalkable( p_node.x, p_node.y ) );
 	}
 
 	/**
