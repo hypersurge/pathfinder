@@ -1,4 +1,4 @@
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE) [![Haxelib Version](https://img.shields.io/badge/haxelib-v0.1.5-blue.svg)](http://lib.haxe.org/p/pathfinder)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE) [![Haxelib Version](https://img.shields.io/badge/haxelib-v0.2.18-blue.svg)](http://lib.haxe.org/p/pathfinder)
 
 # Pathfinder
 Pathfinder is an A* (A Star) pathfinding and graph traversal library designed primarily for use with [awe6](http://awe6.org) (optional).
