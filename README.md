@@ -37,8 +37,9 @@ var l_startNode = new Coordinate( 10, 10 ); // 	The starting node
 var l_destinationNode = new Coordinate( 20, 20 ); // The destination node
 var l_heuristicType = EHeuristic.PRODUCT; // The method of A Star used
 var l_isDiagonalEnabled = false; // Set to true to ensure only up, left, down, right movements are allowed
+var l_isMapDynamic = false; // Set to true to force fresh lookups from IMap.isWalkable() for each node's isWalkable property (e.g. for a dynamically changing map)
 
-var l_path = l_pathfinder.createPath( l_startNode, l_destinationNode, l_heuristicType, l_isDiagonalEnabled );
+var l_path = l_pathfinder.createPath( l_startNode, l_destinationNode, l_heuristicType, l_isDiagonalEnabled, l_isMapDynamic );
 for ( i in l_path )
 {
 	// handle the path - e.g. have an NPC add each coodinate as a waypoint to process
