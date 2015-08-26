@@ -1,9 +1,9 @@
-/*                  __  __    _____           __         
+/*                  __  __    _____           __
  *     ____  ____ _/ /_/ /_  / __(_)___  ____/ /__  _____
  *    / __ \/ __ `/ __/ __ \/ /_/ / __ \/ __  / _ \/ ___/
- *   / /_/ / /_/ / /_/ / / / __/ / / / / /_/ /  __/ /    
- *  / .___/\__,_/\__/_/ /_/_/ /_/_/ /_/\__,_/\___/_/     
- * /_/                                                   
+ *   / /_/ / /_/ / /_/ / / / __/ / / / / /_/ /  __/ /
+ *  / .___/\__,_/\__/_/ /_/_/ /_/_/ /_/\__,_/\___/_/
+ * /_/
  *
  * Copyright (c) 2013, Robert Fell
  *
@@ -37,23 +37,23 @@ class Coordinate
 {
 	public var x:Int;
 	public var y:Int;
-	
+
 	public function new( p_x:Int = 0, p_y:Int = 0 )
 	{
 		x = p_x;
 		y = p_y;
 	}
-	
+
 	public function isEqualTo( p_coordinate:Coordinate ):Bool
 	{
 		return ( ( x == p_coordinate.x ) && ( y == p_coordinate.y ) );
 	}
-	
+
 	public function toString():String
 	{
 		return "(" + x + "," + y + ")";
 	}
-	
+
 	public function clone():Coordinate
 	{
 		return new Coordinate( x, y );
