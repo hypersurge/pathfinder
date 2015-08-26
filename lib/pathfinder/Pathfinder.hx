@@ -50,7 +50,6 @@ class Pathfinder
 	private var _destNode:Node;
 	private var _cols:Int;
 	private var _rows:Int;
-	private var _ignoreCachedPassability:Bool = false;
 	private var _info:{ heuristic:EHeuristic, timeElapsed:Int, pathLength:Int, isDiagonalEnabled:Bool };
 
 	/**
@@ -83,15 +82,6 @@ class Pathfinder
 				l_line[l_iy] = new Node( l_ix, l_iy, _map.isWalkable( l_ix, l_iy ) );
 			}
 		}
-	}
-
-	/**
-	 * Makes pathfinder request `map.isWalkabale()` for each node during pathfinding.
-	 * Without this instruction pathfinder uses cached passability map which is created during pathfinder configuration.
-	 */
-	public function ignoreCachedPassability():Void
-	{
-		_ignoreCachedPassability = true;
 	}
 
 	private inline function _getCost( p_node1:Node, p_node2:Node, p_heuristic:EHeuristic ):Float
@@ -144,9 +134,10 @@ class Pathfinder
 	 * @param	p_dest	The destination node
 	 * @param	p_heuristic	The method of A Star used
 	 * @param	p_isDiagonalEnabled	Set to true to ensure only up, left, down, right movements are allowed
+	 * @param	p_isMapDynamic	Set to true to force fresh lookups from IMap.isWalkable() for each node's isWalkable property (e.g. for a dynamically changing map)
 	 * @return	An array of coordinates from start to destination, or null if no path was found within the time limit
 	 */
-	public function createPath( p_start:Coordinate, p_dest:Coordinate, ?p_heuristic:EHeuristic, p_isDiagonalEnabled:Bool = true ):Array<Coordinate>
+	public function createPath( p_start:Coordinate, p_dest:Coordinate, ?p_heuristic:EHeuristic, p_isDiagonalEnabled:Bool = true, p_isMapDynamic:Bool = false ):Array<Coordinate>
 	{
 		if ( p_heuristic == null )
 		{
@@ -170,7 +161,7 @@ class Pathfinder
 		_startNode.g = 0;
 		_startNode.f = _getCost( _startNode, _destNode, p_heuristic );
 		_openList.push( _startNode );
-		return _searchPath( p_heuristic, p_isDiagonalEnabled );
+		return _searchPath( p_heuristic, p_isDiagonalEnabled, p_isMapDynamic );
 	}
 
 	private inline function _getPath():Array<Coordinate>
@@ -191,9 +182,10 @@ class Pathfinder
 		return l_path;
 	}
 
-	private function _searchPath( p_heuristic:EHeuristic, p_isDiagonalEnabled:Bool = true ):Array<Coordinate>
+	private function _searchPath( p_heuristic:EHeuristic, p_isDiagonalEnabled:Bool = true, p_isMapDynamic:Bool = false ):Array<Coordinate>
 	{
 		var l_minX:Int, l_maxX:Int, l_minY:Int, l_maxY:Int;
+		var l_isWalkable:Bool;
 		var l_g:Float, l_f:Float, l_cost:Float;
 		var l_nextNode:Node = null;
 		var l_currentNode:Node = _startNode;
@@ -210,7 +202,8 @@ class Pathfinder
 				for ( l_ix in l_minX...( l_maxX + 1 ) )
 				{
 					l_nextNode = _nodes[l_ix][l_iy];
-					if ( ( l_nextNode == l_currentNode ) || !_isWalkable( l_nextNode ) )
+					l_isWalkable = ( !p_isMapDynamic && l_nextNode.isWalkable ) || ( p_isMapDynamic && _map.isWalkable( l_ix, l_iy ) );
+					if ( ( l_nextNode == l_currentNode ) || !l_isWalkable )
 					{
 						continue;
 					}
@@ -279,11 +272,6 @@ class Pathfinder
 	private inline function _intMin( p_v1:Int, p_v2:Int ):Int
 	{
 		return ( p_v1 < p_v2 ) ? p_v1 : p_v2;
-	}
-
-	private inline function _isWalkable( p_node:Node ):Bool
-	{
-		return ( !_ignoreCachedPassability && p_node.isWalkable ) || ( _ignoreCachedPassability && _map.isWalkable( p_node.x, p_node.y ) );
 	}
 
 	/**
