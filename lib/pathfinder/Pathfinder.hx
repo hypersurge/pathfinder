@@ -133,7 +133,7 @@ class Pathfinder
 	 * @param	p_start	The starting node
 	 * @param	p_dest	The destination node
 	 * @param	p_heuristic	The method of A Star used
-	 * @param	p_isDiagonalEnabled	Set to true to ensure only up, left, down, right movements are allowed
+	 * @param	p_isDiagonalEnabled	Set to false to ensure only up, left, down, right movements are allowed
 	 * @param	p_isMapDynamic	Set to true to force fresh lookups from IMap.isWalkable() for each node's isWalkable property (e.g. for a dynamically changing map)
 	 * @return	An array of coordinates from start to destination, or null if no path was found within the time limit
 	 */
